@@ -19,4 +19,25 @@ export const OrganizationController = {
     const users = await OrganizationService.listOrganizationUsers(orgId);
     return res.status(200).json(users);
   },
+  invite: async (req: Request, res: Response) => {
+    const { email, role } = req.body;
+    const orgId = (req as any).user.organizationId;
+
+    const membership = await OrganizationService.invitUser(orgId, email, role);
+
+    return res.status(201).json(membership);
+  },
+  changeRole: async (req: Request, res: Response) => {
+    const { id, role } = req.body;
+    const orgId = (req as any).user.organizationId;
+    const updated = await OrganizationService.changeRole(orgId, id, role);
+    res.status(200).json(updated);
+  },
+  removeUser: async (req: Request<{ userId: string }>, res: Response) => {
+    const { userId } = req.params;
+    const orgId = (req as any).user.organizationId;
+
+    await OrganizationService.removeUser(userId, orgId);
+    return res.status(200).json({ message: "User removed" });
+  },
 };
