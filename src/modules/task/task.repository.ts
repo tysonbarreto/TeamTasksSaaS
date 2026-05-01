@@ -24,4 +24,22 @@ export class TaskReportsitory {
   static async delete(id: string) {
     return await TaskModel.findByIdAndDelete(id);
   }
+  static async findFiltered(
+    orgId: string,
+    filters: any,
+    page: number,
+    limit: number,
+  ) {
+    const skip = (page - 1) * limit;
+    const query: any = { organizationId: orgId };
+    if (filters.status) query.status = filters.status;
+    if (filters.assignedTo) query.assignedTo = filters.assignedTo;
+    if (typeof filters.search === "string")
+      query.title = { $regex: filters.search, $options: "i" };
+
+    return await Promise.all([
+      TaskModel.find(query).skip(skip).limit(limit).lean(),
+      TaskModel.countDocuments(query),
+    ]);
+  }
 }

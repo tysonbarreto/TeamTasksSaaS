@@ -4,6 +4,7 @@ import { AppError } from "./utils/AppError";
 import { requestLogger } from "./middleware/requestLogger.middleware.ts";
 import authRoutes from "./modules/auth/auth.routes.ts";
 import orgRoutes from "./modules/organization/organization.routes.ts";
+import taskRoutes from "./modules/task/task.routes.ts";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import { swaggerSpec } from "./config/swagger.ts";
@@ -52,6 +53,7 @@ app.get("/health", (req, res) => {
 
 app.use("/auth", authRoutes);
 app.use("/organization", orgRoutes);
+app.use("/tasks", taskRoutes);
 
 app.use((req, res) => {
   res.status(404).json({
